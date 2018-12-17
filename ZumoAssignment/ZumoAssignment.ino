@@ -64,7 +64,7 @@ void loop() {
       motors.setSpeeds(-150, 150);
     }
     //STOP ZUMO
-    if (incomingByte == 'SPACE') {
+    if (incomingByte == 'x') {
       motors.setSpeeds(0, 0);
     }
     
