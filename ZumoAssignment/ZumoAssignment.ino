@@ -49,22 +49,22 @@ void loop() {
     // read the oldest byte in the serial buffer:
     incomingByte = Serial.read();
     
-    if (incomingByte == 'W') {
+    if (incomingByte == 'w') {
       motors.setSpeeds(200, 200);
       
     }
-    
-    if (incomingByte == 'S') {
+     if (incomingByte == 'a') {
+      motors.setSpeeds(150, -150);
+    }   
+    if (incomingByte == 's') {
       motors.setSpeeds(-150, -150);
     }
-    if (incomingByte == 'A') {
-      motors.setSpeeds(150, -150);
-    }
-    if (incomingByte == 'D') {
+
+    if (incomingByte == 'd') {
       motors.setSpeeds(-150, 150);
     }
     //STOP ZUMO
-    if (incomingByte == 'X') {
+    if (incomingByte == 'SPACE') {
       motors.setSpeeds(0, 0);
     }
     
