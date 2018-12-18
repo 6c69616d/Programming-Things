@@ -64,7 +64,7 @@ void loop() {
       motors.setSpeeds(-150, 150);
     }
     //STOP ZUMO
-    if (incomingByte == 'x') {
+    if (incomingByte == ' ') {
       motors.setSpeeds(0, 0);
     }
     
