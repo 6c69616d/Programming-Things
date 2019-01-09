@@ -68,6 +68,21 @@ void loop() {
       motors.setSpeeds(0, 0);
     }
     
+    if (incomingByte == 'c') {
+      
+    }
+
+    if (incomingByte == 'Ro R') {
+      
+    }
+
+    if (incomingByte == 'Ro L') {
+      
+    }
+
+    if(incomingByte == 'e'){
+      
+    }
   }
   
 }

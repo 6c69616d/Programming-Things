@@ -24,6 +24,9 @@ public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:5006
 
 public void textfield1_change1(GTextField source, GEvent event) { //_CODE_:textfield1:568846:
   println("textfield1 - GTextField >> GEvent." + event + " @ " + millis());
+  String text = textfield1.getText();
+  println(text);
+  serialPort.write(text);
 } //_CODE_:textfield1:568846:
 //left
 public void button2_click1(GButton source, GEvent event) { //_CODE_:button2:308221:
