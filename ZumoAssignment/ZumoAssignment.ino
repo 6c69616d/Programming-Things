@@ -10,12 +10,13 @@
 
 
 ZumoMotors motors;
-
+ZumoBuzzer buzzer;
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
 const int ledPin = 13; // the pin that the LED is attached to
 int incomingByte;      // a variable to read incoming serial data into
+String incomingBytes;
 
 void setup() {
   // initialize serial communication:
@@ -39,50 +40,57 @@ void loop() {
 //    motors.setSpeeds(100,100);
 //  }
   
-
-  delay(250);
-  
   
   // see if there's incoming serial data:
   if (Serial.available() > 0) 
   {
     // read the oldest byte in the serial buffer:
-    incomingByte = Serial.read();
+    //incomingByte = Serial.read();
+    incomingBytes = Serial.readString();
+    incomingBytes.trim();
     
-    if (incomingByte == 'w') {
+    //Serial.println(incomingByte);
+    Serial.println("'" + incomingBytes + "'");
+    
+    if (incomingBytes == "w") {
       motors.setSpeeds(200, 200);
       
     }
-     if (incomingByte == 'a') {
+    else if (incomingBytes == "a") {
       motors.setSpeeds(150, -150);
     }   
-    if (incomingByte == 's') {
+    else if (incomingBytes == "s") {
       motors.setSpeeds(-150, -150);
     }
 
-    if (incomingByte == 'd') {
+    else if (incomingBytes == "d") {
       motors.setSpeeds(-150, 150);
     }
     //STOP ZUMO
-    if (incomingByte == ' ') {
+    else if (incomingBytes == "") {
       motors.setSpeeds(0, 0);
     }
     
-    if (incomingByte == 'c') {
+    else if (incomingBytes == "c") {
       
     }
 
-    if (incomingByte == 'Ro R') {
+    else if (incomingBytes == "Ro R") {
+      motors.setSpeeds(200, 200);
+      Serial.println("hello world");
+    }
+
+    else if (incomingBytes == "Ro L") {
       
     }
 
-    if (incomingByte == 'Ro L') {
+    else if(incomingBytes == "e"){
       
     }
 
-    if(incomingByte == 'e'){
-      
-    }
+    
   }
+
+
   
 }

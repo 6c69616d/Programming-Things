@@ -20,13 +20,14 @@ public void textarea1_change1(GTextArea source, GEvent event) { //_CODE_:textare
 
 public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:500642:
   println("button1 - GButton >> GEvent." + event + " @ " + millis());
+  String text = textfield1.getText();
+  println(text);
+  serialPort.write(text);
+  textfield1.setText("");
 } //_CODE_:button1:500642:
 
 public void textfield1_change1(GTextField source, GEvent event) { //_CODE_:textfield1:568846:
   println("textfield1 - GTextField >> GEvent." + event + " @ " + millis());
-  String text = textfield1.getText();
-  println(text);
-  serialPort.write(text);
 } //_CODE_:textfield1:568846:
 //left
 public void button2_click1(GButton source, GEvent event) { //_CODE_:button2:308221:
