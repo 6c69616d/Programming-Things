@@ -14,6 +14,7 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and
 
 const int ledPin = 13; // the pin that the LED is attached to    
 String incomingBytes; // a variable to read incoming serial data into
+int roomNumber = 0; // integer variable to store the room number
 
 void setup() {
   // initialize serial communication:
@@ -55,21 +56,90 @@ void loop() {
     }
     else if (incomingBytes == "Ro R") // else if the incomingBytes string to set to 'Ro R'
     {
-      motors.setSpeeds(200, 200);
-      Serial.println("hello world");
+      motors.setSpeeds(-150, 150); //turn right into the room
+      roomNumber = roomNumber++; // increment the room number
+      String strRoomNumber = String(roomNumber); // convert
+      Serial.println("Here is room number" + strRoomNumber + "and is located on the right"); //number the room and state whether on the left or right of the room in the GUI
+      delay(50);
+
+      storeRoomLocations(roomNumber, "right");
+      //Zumo to retain this information
+      
+      motors.setSpeeds(150,150);
+      
+      int pingcm = sonar.ping_cm();
+      if (pingcm > 0)       //see if it detects anything
+      {
+        Serial.println("Object detected in room " + strRoomNumber);
+        storeObjectDetected(roomNumber);
+      }
+      else      //if not detected go further into the room
+      {
+        
+        motors.setSpeeds(150, -150);
+        delay(20);
+        motors.setSpeeds(0, 0);
+        if (pingcm > 0)
+        {
+          Serial.println("Object detected in room " + strRoomNumber);
+          storeObjectDetected(roomNumber);
+        }
+        else
+        {
+          Serial.println("Nothing detected");
+        }
+      }
+      //Zumo to stop and wait for manual control
     }
     else if (incomingBytes == "Ro L") // else if the incomingBytes string is set to 'Ro L'
     {
+      motors.setSpeeds(150, -150); //turn left into the room
+      roomNumber = roomNumber++; // increment the room number
+      String strRoomNumber = String(roomNumber); // convert
+      Serial.println("Here is room number" + strRoomNumber + "and is located on the left"); //number the room and state whether on the left or right of the room in the GUI
+      delay(50);
+
+      storeRoomLocations(roomNumber, "left");
+      //Zumo to retain this information
       
+      motors.setSpeeds(150,150);
+      
+      int pingcm = sonar.ping_cm();
+      if (pingcm > 0)       //see if it detects anything
+      {
+        Serial.println("Object detected in room " + strRoomNumber);
+        storeObjectDetected(roomNumber);
+      }
+      else      //if not detected go further into the room
+      {
+        
+        motors.setSpeeds(-150, 150);
+        delay(20);
+        motors.setSpeeds(0, 0);
+        if (pingcm > 0)
+        {
+          Serial.println("Object detected in room " + strRoomNumber);
+          storeObjectDetected(roomNumber);
+        }
+        else
+        {
+          Serial.println("Nothing detected");
+        }
+      }
+      //Zumo to stop and wait for manual control
     }
     else if (incomingBytes == "e") // else if the incomingBytes string is set to e
     {
       
     }
-
-    
   }
+}
+void storeObjectDetected(int roomNumber)
+{
+  //add object detected
+}
 
-
-  
+void storeRoomLocations(int roomNumber, String location)
+{
+  //add room location
 }
