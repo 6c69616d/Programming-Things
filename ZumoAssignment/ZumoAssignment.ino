@@ -6,7 +6,7 @@
 //purple ground
 #define TRIGGER_PIN  6  // Arduino pin tied to trigger pin on the ultrasonic sensor.grey
 #define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor. black
-#define MAX_DISTANCE 50 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define MAX_DISTANCE 15 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define NUM_SENSORS 6
 #define QTR_THRESHOLD  800
 
@@ -52,6 +52,7 @@ void commands()
 {
   if (Serial.available() > 0) // see if there's incoming serial data:
   {
+    autonomous = false;
     incomingBytes = Serial.readString(); // read the serial string data into the incoming bytes variable
     incomingBytes.trim(); // trim the string in the incomingBytes variable to remove any whitespace at the end of the string
 
@@ -181,7 +182,7 @@ void roomSearch(String location) {
   {
 
     motors.setSpeeds(150, -150);
-    delay(20);
+    delay(200);
     motors.setSpeeds(0, 0);
     if (pingcm > 0)
     {

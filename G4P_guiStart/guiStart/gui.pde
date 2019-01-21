@@ -16,7 +16,7 @@
 
 public void textarea1_change1(GTextArea source, GEvent event) { //_CODE_:textarea1:653858:
   println("textarea1 - GTextArea >> GEvent." + event + " @ " + millis());
-  String messaPort.readString();
+  String message = serialPort.readString();
   textarea1.setText(message);
 } //_CODE_:textarea1:653858:
 
