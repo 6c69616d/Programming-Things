@@ -16,8 +16,8 @@
 
 public void textarea1_change1(GTextArea source, GEvent event) { //_CODE_:textarea1:653858:
   println("textarea1 - GTextArea >> GEvent." + event + " @ " + millis());
-  String message = serialPort.readString();
-  textarea1.appendText(message);
+  String messaPort.readString();
+  textarea1.setText(message);
 } //_CODE_:textarea1:653858:
 
 public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:500642:
@@ -52,9 +52,13 @@ public void button5_click1(GButton source, GEvent event) { //_CODE_:button5:9841
   serialPort.write("s");
 } //_CODE_:button5:984108:
 public void button6_click1(GButton source, GEvent event) { //_CODE_:button6:984108:
-  println("button5 - GButton >> GEvent." + event + " @ " + millis());
+  println("button6 - GButton >> GEvent." + event + " @ " + millis());
   serialPort.write(" ");
 } //_CODE_:button6:984108:
+public void button7_click1(GButton source, GEvent event) { //_CODE_:button7:984108:
+  println("button7 - GButton >> GEvent." + event + " @ " + millis());
+  serialPort.write("r");
+} //_CODE_:button:984108:
 
 
 // Create all the GUI controls. 
@@ -96,10 +100,14 @@ public void createGUI(){
   button5.setText("Back");
   button5.setTextBold();
   button5.addEventHandler(this, "button5_click1");
-  button5 = new GButton(this, 10, 10, 80, 30);
-  button5.setText("Stop");
-  button5.setTextBold();
-  button5.addEventHandler(this, "button6_click1");
+  button6 = new GButton(this, 10, 10, 80, 30);
+  button6.setText("Stop");
+  button6.setTextBold();
+  button6.addEventHandler(this, "button6_click1");
+  button7 = new GButton(this, 20, 20, 80, 30);
+  button7.setText("90");
+  button7.setTextBold();
+  button7.addEventHandler(this, "button7_click1");
 }
 
 // Variable declarations 
@@ -112,3 +120,4 @@ GButton button3;
 GButton button4; 
 GButton button5; 
 GButton button6;
+GButton button7;
