@@ -16,8 +16,8 @@
 
 public void textarea1_change1(GTextArea source, GEvent event) { //_CODE_:textarea1:653858:
   println("textarea1 - GTextArea >> GEvent." + event + " @ " + millis());
-  String message = serialPort.readString();
-  textarea1.setText(message);
+    String message = serialPort.readString();
+    textarea1.setText(message);
 } //_CODE_:textarea1:653858:
 
 public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:500642:
@@ -55,10 +55,7 @@ public void button6_click1(GButton source, GEvent event) { //_CODE_:button6:9841
   println("button6 - GButton >> GEvent." + event + " @ " + millis());
   serialPort.write(" ");
 } //_CODE_:button6:984108:
-public void button7_click1(GButton source, GEvent event) { //_CODE_:button7:984108:
-  println("button7 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("r");
-} //_CODE_:button:984108:
+
 
 
 // Create all the GUI controls. 
@@ -68,7 +65,7 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setCursor(ARROW);
   surface.setTitle("Sketch Window");
-  textarea1 = new GTextArea(this, 237, 11, 198, 199, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
+  textarea1 = new GTextArea(this, 237, 11, 300, 300, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
   textarea1.setText("Messages from Zumo");
   textarea1.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   textarea1.setOpaque(true);
@@ -104,10 +101,7 @@ public void createGUI(){
   button6.setText("Stop");
   button6.setTextBold();
   button6.addEventHandler(this, "button6_click1");
-  button7 = new GButton(this, 20, 20, 80, 30);
-  button7.setText("90");
-  button7.setTextBold();
-  button7.addEventHandler(this, "button7_click1");
+
 }
 
 // Variable declarations 
