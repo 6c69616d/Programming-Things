@@ -6,7 +6,7 @@
 //purple ground
 #define TRIGGER_PIN  6  // Arduino pin tied to trigger pin on the ultrasonic sensor.grey
 #define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor. black
-#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define MAX_DISTANCE 15 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define NUM_SENSORS 6 // Number of sensors that the ZumoReflectanceSensorArray has
 #define QTR_THRESHOLD  800 // Reflectance from ZumoReflectanceSensorArray threshold. Used to know when the Zumo is on black.
 
@@ -27,16 +27,16 @@ String roomsWithObjects[10]; // an array to hold the rooms with objects
 void setup() {
   Serial.begin(9600); // initialize the serial communication
   pinMode(ledPin, OUTPUT); // initialize the LED pin as an output
-  sensors.init(); // initialise the ZumoReflectanceSensorArray sensors
-  sensors.calibrate(); // calibrate the ZumoReflectanceSensorArray sensors
+  sensors.init(QTR_NO_EMITTER_PIN); // initialise the ZumoReflectanceSensorArray sensors
+  sensors.calibrate(QTR_NO_EMITTER_PIN); // calibrate the ZumoReflectanceSensorArray sensors
   button.waitForButton(); // wait until that button is pressed to start moving
 }
 
 void loop() {
 
   commands(); // function call for the commands sent from the GUI
-        Serial.print("Loop ");
-        Serial.println(sonar.ping_cm());  
+  //  Serial.print("Loop ");
+  //  Serial.println(sonar.ping_cm());
   if (autonomous) // if the autonomous bool is set to true
   {
     motors.setSpeeds(100, 100); // set the motor speeds to 100
@@ -70,7 +70,7 @@ void commands()
     }
     else if (incomingBytes == "d") // else if incomingBytes string is set to d
     {
-      Serial.println("turning right");
+      //Serial.println("turning right");
       motors.setSpeeds(100, -100); // Set the left motor speed to 150 in reverse but the right motor to 150 forward making the Zumo turn right
     }
     else if (incomingBytes == "") // else if the incomingBytes string is empty
@@ -84,12 +84,13 @@ void commands()
     }
     else if (incomingBytes == "Ro R") // else if the incomingBytes string to set to 'Ro R'
     {
-      for (int i = 0; i < 10; ++i) {
-        Serial.print("Ro R ");
-        Serial.println(String(sonar.ping_cm()));   
-      }
-      return;
+      //for (int i = 0; i < 10; ++i) {
+      //  Serial.print("Ro R ");
+      //  Serial.println(String(sonar.ping_cm()));
+      //}
+      //return;
       motors.setSpeeds(150, -150); //turn right into the room
+      delay(600);
       roomSearch("right"); // function call of roomSearch passing through right so that the messages inside relate to right hand room
     }
     else if (incomingBytes == "Ro L") // else if the incomingBytes string is set to 'Ro L'
@@ -176,7 +177,7 @@ void storeRoomLocations(int roomNumber, String location)
 }
 
 void roomSearch(String location) {
-  bool search = true;
+  bool object = false;
   roomNumber++; // increment the room number
   String strRoomNumber = String(roomNumber); // convert the room number to a string
   Serial.println("Here is room number " + strRoomNumber + " and is located on the " + location + "\r\n"); //number the room and state whether on the left or right of the room in the GUI
@@ -184,28 +185,59 @@ void roomSearch(String location) {
   storeRoomLocations(roomNumber, location); //Zumo retains the room numbers and locations
   motors.setSpeeds(75, 75);
   delay(500);
-      motors.setSpeeds(100, -100);
-  Serial.println("Spinning?");
-  while (true)
-  {
-   int pingcm = sonar.ping_cm();
-    int i = 0;
+  //  motors.setSpeeds(100, -100);
+  //  //Serial.println("Spinning?");
+  //  int i = 0;
+  //  while (search)
+  //  {
+  //   int pingcm = sonar.ping_cm();
+  //
+  //
+  //   //Serial.println("Pingcm? " + pingcm);
+  //    if (pingcm > 0) {
+  //
+  //      Serial.println("Object detected in room " + strRoomNumber + "\r\n");
+  //      //storeObjectDetected(roomNumber);
+  //      motors.setSpeeds(0, 0);
+  //      search = false;
+  //      //break;
+  //    }
+  //    if (i == 5) {
+  //      motors.setSpeeds(0, 0);
+  //      Serial.println("Nothing Detected");
+  //      search = false;
+  //     // break;
+  //    }
+  //    i++;
 
-   Serial.println("Pingcm? " + pingcm);
-    if (pingcm > 0) {
-      Serial.println("Object detected in room " + strRoomNumber + "\r\n");
-      //storeObjectDetected(roomNumber);
-      motors.setSpeeds(0, 0);
-      break;
+  for (int i = 0; i < 80; i++)
+  {
+    if ((i > 10 && i <= 30) || (i > 50 && i <= 70))
+      motors.setSpeeds(-200, 200);
+    else
+      motors.setSpeeds(200, -200);
+    if (sonar.ping_cm() > 0)
+    {
+      object = true;
     }
-    if (i == 5) {
-      motors.setSpeeds(0, 0);
-      Serial.println("Nothing Detected");
-      break;
-    }
-    i++;
+
+
+    // Since our counter runs to 80, the total delay will be
+    // 80*20 = 1600 ms.
+    delay(20);
   }
   motors.setSpeeds(0, 0);
+  if (object)
+  {
+    Serial.println("Object detected in room " + strRoomNumber + "\r\n");
+    //storeObjectDetected(roomNumber);
+  }
+  else {
+    Serial.println("Nothing Detected");
+  }
 
 }
+//motors.setSpeeds(0, 0);
+
+
 //Zumo to stop and wait for manual control
