@@ -1,6 +1,6 @@
 #include <NewPing.h>
 #include <Wire.h>
-#include <ZumoShield.h>
+#include "movement.h"
 
 //white 5v
 //purple ground
@@ -13,7 +13,6 @@
 #define NUM_SENSORS 6 // Number of sensors that the ZumoReflectanceSensorArray has
 #define QTR_THRESHOLD  800 // Reflectance from ZumoReflectanceSensorArray threshold. Used to know when the Zumo is on black.
 
-ZumoMotors motors; //declare a variable called motors of type ZumoMotors so that we can set the speeds of the motors to control the robot
 Pushbutton button(ZUMO_BUTTON); // declare a variable so that the Pushbutton on the zumo can be used
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN); // ZumoReflectanceSensorArray setup with no emitter pin so we can access the ZumoReflectanceSensorArray sensors.
@@ -45,7 +44,7 @@ void loop() // a loop function that is always looping
 
   if (autonomous) // if the autonomous bool is set to true
   {
-    motors.setSpeeds(100, 100); // set the motor speeds to 100
+    Movement::forward(100); // move the Zumo forwards at a speed of 100
     autonomousMovement(); // function call to the autonomous movement functionality
   }
 }
@@ -60,13 +59,13 @@ void commands() // a function that holds the commands functionality
     incomingBytes.trim(); // trim the string in the incomingBytes variable to remove any whitespace at the end of the string
     if (incomingBytes == "w") // if the incomingBytes string is set to w
     {
-      motors.setSpeeds(150, 150); // Set both the motor speeds to 150
+      Movement::forward(150); // move the Zumo forwards at a speed of 150
     }
     else if (incomingBytes == "a") // else if the incomingBytes string is set to a
     {
       if (!ignoreCommands) // if ignoreCommands is set to false
       {
-        motors.setSpeeds(-125, 125); // Set left motor to 150 but set right motor to 150 in reverse making the Zumo turn left
+        Movement::left(125); // move the Zumo left at a speed of 125
       }
       else // if ignoreCommands is set to true
       {
@@ -75,13 +74,13 @@ void commands() // a function that holds the commands functionality
     }
     else if (incomingBytes == "s") // else if the incomingBytes string is set to s
     {
-      motors.setSpeeds(-150, -150); // Set both motors to 150 in reverse
+      Movement::backward(150); // move the Zumo forwards at a speed of 150
     }
     else if (incomingBytes == "d") // else if incomingBytes string is set to d
     {
       if (!ignoreCommands) // if ignoreCommands is set to false
       {
-        motors.setSpeeds(125, -125); // Set the left motor speed to 150 in reverse but the right motor to 150 forward making the Zumo turn right
+        Movement::right(125); // move the Zumo right at a speed of 125
       }
       else // if ignore commands is set to true
       {
@@ -90,7 +89,7 @@ void commands() // a function that holds the commands functionality
     }
     else if (incomingBytes == "") // else if the incomingBytes string is empty
     {
-      motors.setSpeeds(0, 0); // Set the motor speeds to 0 bringing the Zumo to a stop
+      Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
     }
     else if (incomingBytes == "c") // else if the incomingBytes string is set to c
     {
@@ -101,7 +100,7 @@ void commands() // a function that holds the commands functionality
     {
       if (!ignoreCommands) // if ignoreCommands is set to false
       {
-        motors.setSpeeds(150, -150); //set the left motor to a speed of 150 forward and the right motor to 150 in reverse to turn right into the room
+        Movement::right(150); // move the Zumo right into the room at a speed of 150
         delay(800); // delay for 600 milliseconds
         roomSearch("right"); // function call of roomSearch passing through right so that the messages inside relate to right hand room
       }
@@ -114,7 +113,7 @@ void commands() // a function that holds the commands functionality
     {
       if (!ignoreCommands) // if ignoreCommands is set to false
       {
-        motors.setSpeeds(-150, 150); //turn left into the room
+        Movement::left(150); //turn left into the room at a speed of 150
         delay(800); // delay for 600 milliseconds
         roomSearch("left"); // function call of roomSearch passing through left so that the messages inside relate to left hand room
       }
@@ -169,8 +168,8 @@ void autonomousMovement() // a function that holds the autonomous movement funct
       (sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)) // if the two outer sensors or the two right most sensors or the two left most sensors are
     // greater than the QTR_THRESHOLD the zumo has hit a wall
   {
-    motors.setSpeeds(0, 0); // set the motor speeds to 0 making the zumo stop
-    delay(500); // delay for 500 milliseconds
+    Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
+    //delay(500); // delay for 500 milliseconds
     Serial.println("a wall or corner has been hit"); // write a message to the GUI saying a wall or corner has been hit
     Serial.println("enter a command"); // write a message to the GUI telling the user to enter a command
     autonomous = false; // set autonomous bool to false turn the functionality off
@@ -180,16 +179,16 @@ void autonomousMovement() // a function that holds the autonomous movement funct
     delay(50); // delay for 50 milliseconds
     if (sensor_values[0] > QTR_THRESHOLD) // if the left most sensor value is greater than the QTR_THRESHOLD then the robot has slightly touched a left wall
     {
-      motors.setSpeeds(0, 0); // set the motor speeds to 0
+      Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
       delay(500); // delay for 500 milliseconds
-      motors.setSpeeds(150, 0); // set the left motor to a speed of 150
+      Movement::adjust(150, 0); // adjust the Zumo slightly to the right at a speed of 150 so it returns to the white
       delay(250); // delay for 250 miliseconds
     }
     else if (sensor_values[5] > QTR_THRESHOLD) // if the right most sensor value is greater than the QTR_THRESHOLD then the robot has slightly touched a right wall
     {
-      motors.setSpeeds(0, 0); // set the motor speeds to 0
+      Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
       delay(500); // delay for 500 milliseconds
-      motors.setSpeeds(0, 150); // set the right motor to a speed of 150
+      Movement::adjust(0, 150); // adjust the Zumo slightly to the left at a speed of 150 so it returns to the white
       delay(250); // delay for 250 milliseconds
     }
   }
@@ -216,22 +215,26 @@ void roomSearch(String location) // a function that holds the room searching fun
   Serial.println("Here is room number " + strRoomNumber + " and is located on the " + location + "\r\n"); //number the room and state whether on the left or right of the room in the GUI
 
   storeRoomLocations(roomNumber, location); //Zumo retains the room numbers and locations
-  motors.setSpeeds(75, 75); // set both motors to a speed of 75
+  Movement::forward(75); // move the Zumo forwards at a speed of 75
   delay(500); // delay for 500 milliseconds
 
   for (int i = 0; i < 80; i++) // for i is less than 100
   {
     if ((i > 10 && i <= 30) || (i > 50 && i <= 70)) // if i is greater than 40 and i is less than or equal to 60 or i is greater than 80 or less than or equal to 100
-      motors.setSpeeds(-150, 150);
+    {
+      Movement::left(150); // move the Zumo left at a speed of 150
+    }
     else
-      motors.setSpeeds(150, -150); // set the left motor to a speed of 150 forwards and the right to 150 in reverse to turn the Zumo right
+    {
+      Movement::right(150); // move the Zumo right at a speed of 150
+    }
     if (sonar.ping_cm() > 0) // if the ultrasonic sensor has a reading in centimetres greater than 0
     {
       object = true; // an object has been detected in the room
     }
     delay(20); // delay for 20 milliseconds
   }
-  motors.setSpeeds(0, 0); // set both the motors to 0 bringing the Zumo to a stop
+  Movement::holt(); // set both the motors to 0 bringing the Zumo to a stop
 
   if (object) // if an object has been detected
   {
