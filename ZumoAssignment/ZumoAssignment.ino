@@ -145,14 +145,20 @@ void commands() // a function that holds the commands functionality
 
       if (ePressed == 2) // if the key has been pressed twice
       {
-        //Serial.println("in e == 2");
+
         for (String roomAndLocation : roomsAndLocations) // for every room and location stored in the roomsAndLocations array
         {
-          Serial.println(roomAndLocation); // print out the contents of that element of the array
+          if (roomAndLocation.length > 0) // if the array item is empty do not output
+          {
+            Serial.println(roomAndLocation); // print out the contents of that element of the array
+          }
         }
         for (String roomWithObject : roomsWithObjects) // for every room with an object detected in the room
         {
-          Serial.println(roomWithObject); // print out the contents of that element of the array
+          if (roomWithObject.length() > 0) // if the array item is empty do not output
+          {
+            Serial.println(roomWithObject); // print out the contents of that element of the array
+          }
         }
       }
     }
