@@ -9,7 +9,7 @@
 
 #define TRIGGER_PIN  6  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAX_DISTANCE 50 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define MAX_DISTANCE 20 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define NUM_SENSORS 6 // Number of sensors that the ZumoReflectanceSensorArray has
 #define QTR_THRESHOLD  800 // Reflectance from ZumoReflectanceSensorArray threshold. Used to know when the Zumo is on black.
 
@@ -42,7 +42,7 @@ void setup()  // a function that sets up the Zumo
 void loop() // a loop function that is always looping
 {
   commands(); // function call for the commands sent from the GUI
-  
+
   if (autonomous) // if the autonomous bool is set to true
   {
     motors.setSpeeds(100, 100); // set the motor speeds to 100
@@ -60,17 +60,17 @@ void commands() // a function that holds the commands functionality
     incomingBytes.trim(); // trim the string in the incomingBytes variable to remove any whitespace at the end of the string
     if (incomingBytes == "w") // if the incomingBytes string is set to w
     {
-      motors.setSpeeds(150, 150); // Set both the motor speeds to 200
+      motors.setSpeeds(150, 150); // Set both the motor speeds to 150
     }
     else if (incomingBytes == "a") // else if the incomingBytes string is set to a
     {
-      if (!ignoreCommands)
+      if (!ignoreCommands) // if ignoreCommands is set to false
       {
-        motors.setSpeeds(-150, 150); // Set left motor to 150 but set right motor to 150 in reverse making the Zumo turn left
+        motors.setSpeeds(-125, 125); // Set left motor to 150 but set right motor to 150 in reverse making the Zumo turn left
       }
-      else
+      else // if ignoreCommands is set to true
       {
-        mainCorridor = true;
+        mainCorridor = true; // Set the mainCorridor to true so that the Zumo knows it has been passed
       }
     }
     else if (incomingBytes == "s") // else if the incomingBytes string is set to s
@@ -79,12 +79,13 @@ void commands() // a function that holds the commands functionality
     }
     else if (incomingBytes == "d") // else if incomingBytes string is set to d
     {
-      if (!ignoreCommands) {
-        motors.setSpeeds(150, -150); // Set the left motor speed to 150 in reverse but the right motor to 150 forward making the Zumo turn right
-      }
-      else
+      if (!ignoreCommands) // if ignoreCommands is set to false
       {
-        mainCorridor = true;
+        motors.setSpeeds(125, -125); // Set the left motor speed to 150 in reverse but the right motor to 150 forward making the Zumo turn right
+      }
+      else // if ignore commands is set to true
+      {
+        mainCorridor = true; // Set the mainCorridor to true so that the Zumo knows it has been passed
       }
     }
     else if (incomingBytes == "") // else if the incomingBytes string is empty
@@ -98,68 +99,61 @@ void commands() // a function that holds the commands functionality
     }
     else if (incomingBytes == "Ro R") // else if the incomingBytes string to set to 'Ro R'
     {
-      //Serial.println("Detected Ro R keypress");
-      //for (int i = 0; i < 10; ++i) {
-      //  Serial.print("Ro R ");
-      //  Serial.println(String(sonar.ping_cm()));
-      //}
-      //return;
-      if (!ignoreCommands) {
-        motors.setSpeeds(150, -150); //turn right into the room
-        delay(600);
+      if (!ignoreCommands) // if ignoreCommands is set to false
+      {
+        motors.setSpeeds(150, -150); //set the left motor to a speed of 150 forward and the right motor to 150 in reverse to turn right into the room
+        delay(800); // delay for 600 milliseconds
         roomSearch("right"); // function call of roomSearch passing through right so that the messages inside relate to right hand room
       }
-      else {
-        passedRoom = true;
+      else // if ignoreCommands is set to true
+      {
+        passedRoom = true; // set passedRoom to true so that the Zumo knows it has been passed
       }
     }
     else if (incomingBytes == "Ro L") // else if the incomingBytes string is set to 'Ro L'
     {
-      if (!ignoreCommands)
+      if (!ignoreCommands) // if ignoreCommands is set to false
       {
         motors.setSpeeds(-150, 150); //turn left into the room
-        delay(600);
+        delay(800); // delay for 600 milliseconds
         roomSearch("left"); // function call of roomSearch passing through left so that the messages inside relate to left hand room
       }
-      else
+      else // if ignoreCommands is set to true
       {
-        passedRoom = true;
+        passedRoom = true; // set passedRoom to true so that the Zumo knows it has been passed
       }
     }
     else if (incomingBytes == "e") // else if the incomingBytes string is set to e
     {
-      Serial.println("End of T junction reached");
-      ePressed++;
-      //Serial.println(String(ePressed));
-      autonomous = false;
-      while (!autonomous && (ePressed != 2))
+      Serial.println("End of T junction reached"); // write out a message to the GUI saying it has reached the end of a T junction
+
+      ePressed++; // increment the amount of types the e key has been pressed so we know if it is at the second end of the T junction or not
+      autonomous = false; // set autonomous to false to disable the autonomous functionality
+
+      while (!autonomous && (ePressed != 2)) // while autonomous is set to false and the e key is not on the second press
       {
-        commands();
+        commands(); // function call for the commands sent from the GUI
       }
 
-      if (!passedRoom && !mainCorridor)
+      if (!passedRoom && !mainCorridor) // if the room has not been passed and the mainCorridor has not been passed
       {
-        //Serial.println("e - setting ignoreCommands to true");
-        ignoreCommands = true;
+        ignoreCommands = true; // set ignoreCommands so that the Zumo ignores the necessary commands
       }
-      else
+      else // if the room has been passed and the main corridor has been passed
       {
-        //Serial.println("e - setting ignoreCommands to false");
-        ignoreCommands = false;
+        ignoreCommands = false; // set ignoreCommands so that Zumo accepts all commands
       }
-      //Serial.println("e - line 148");
-      if (ePressed == 2)
+
+      if (ePressed == 2) // if the key has been pressed twice
       {
         //Serial.println("in e == 2");
         for (String roomAndLocation : roomsAndLocations) // for every room and location stored in the roomsAndLocations array
         {
-            Serial.println(roomAndLocation); // print out the contents of that element of the array
-          
-
+          Serial.println(roomAndLocation); // print out the contents of that element of the array
         }
         for (String roomWithObject : roomsWithObjects) // for every room with an object detected in the room
         {
-            Serial.println(roomWithObject); // print out the contents of that element of the array
+          Serial.println(roomWithObject); // print out the contents of that element of the array
         }
       }
     }
@@ -173,7 +167,7 @@ void autonomousMovement() // a function that holds the autonomous movement funct
   if ((sensor_values[0] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD) ||
       (sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD) ||
       (sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)) // if the two outer sensors or the two right most sensors or the two left most sensors are
-                                                                              // greater than the QTR_THRESHOLD the zumo has hit a wall
+    // greater than the QTR_THRESHOLD the zumo has hit a wall
   {
     motors.setSpeeds(0, 0); // set the motor speeds to 0 making the zumo stop
     delay(500); // delay for 500 milliseconds
@@ -207,7 +201,7 @@ void storeObjectDetected(int roomNumber) // a function that allows the Zumo to s
   roomsWithObjects[roomNumber - 1] = text; // add the string of room and object detected to the array of rooms with objects detected
 }
 
-void storeRoomLocations(int roomNumber, String location) // a function that allows the Zumo to hold the room numbers and their locations either left or right of the corridor 
+void storeRoomLocations(int roomNumber, String location) // a function that allows the Zumo to hold the room numbers and their locations either left or right of the corridor
 {
   String strRoomNumber = String(roomNumber); // convert the room number to a string
   String text = "Room: " + strRoomNumber + " Location: " + location + ""; // create a string with the room number and location
@@ -224,28 +218,28 @@ void roomSearch(String location) // a function that holds the room searching fun
   storeRoomLocations(roomNumber, location); //Zumo retains the room numbers and locations
   motors.setSpeeds(75, 75); // set both motors to a speed of 75
   delay(500); // delay for 500 milliseconds
-  
-  for (int i = 0; i < 100; i++) // for i is less than 100
+
+  for (int i = 0; i < 80; i++) // for i is less than 100
   {
-    if ((i > 40 && i <= 60) || (i > 80 && i <= 100)) // if i is greater than 40 and i is less than or equal to 60 or i is greater than 80 or less than or equal to 100 
-      motors.setSpeeds(-150, 150); 
+    if ((i > 10 && i <= 30) || (i > 50 && i <= 70)) // if i is greater than 40 and i is less than or equal to 60 or i is greater than 80 or less than or equal to 100
+      motors.setSpeeds(-150, 150);
     else
       motors.setSpeeds(150, -150); // set the left motor to a speed of 150 forwards and the right to 150 in reverse to turn the Zumo right
     if (sonar.ping_cm() > 0) // if the ultrasonic sensor has a reading in centimetres greater than 0
     {
       object = true; // an object has been detected in the room
-    } 
+    }
     delay(20); // delay for 20 milliseconds
   }
   motors.setSpeeds(0, 0); // set both the motors to 0 bringing the Zumo to a stop
-  
+
   if (object) // if an object has been detected
   {
     Serial.println("Object detected in room " + strRoomNumber + "\r\n"); // write a message to the GUI that an object was detected and in what room
     storeObjectDetected(roomNumber); // call the storeObjectDetected to store that an object has been detected and the room number
   }
-  else 
+  else
   {
-    Serial.println("Nothing Detected"); // write a message to the GUI that nothing was detected 
+    Serial.println("Nothing Detected"); // write a message to the GUI that nothing was detected
   }
 }
