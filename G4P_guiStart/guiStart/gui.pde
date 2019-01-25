@@ -1,94 +1,81 @@
-/* =========================================================
- * ====                   WARNING                        ===
- * =========================================================
- * The code in this tab has been generated from the GUI form
- * designer and care should be taken when editing this file.
- * Only add/edit code inside the event handlers i.e. only
- * use lines between the matching comment tags. e.g.
- 
- void myBtnEvents(GButton button) { //_CODE_:button1:12356:
- // It is safe to enter your event code here  
- } //_CODE_:button1:12356:
- 
- * Do not rename this tab!
- * =========================================================
- */
-
-public void textarea1_change1(GTextArea source, GEvent event) { //_CODE_:textarea1:653858:
-  println("textarea1 - GTextArea >> GEvent." + event + " @ " + millis());
-  //String message = serialPort.readString();
-  //textarea1.appendText(message);
-}
-//_CODE_:textarea1:653858:
-
 public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:500642:
   println("button1 - GButton >> GEvent." + event + " @ " + millis());
-  String text = textfield1.getText();
-  println(text);
-  serialPort.write(text);
-  textfield1.setText("");
+  // on the click event of the send messages to Zumo button do:
+  String text = textfield1.getText(); // get the text of the textfield1 which is the text field which is 
+                                      // used to send messages tp the Zumo and set it into a string called text
+  serialPort.write(text); // write the text field text out to the serial which will execute code in the Arduino files to complete various commands
+  textfield1.setText(""); // set the textfield to an empty string so that once the message has sent the text field becomes empty
 } //_CODE_:button1:500642:
-
 public void textfield1_change1(GTextField source, GEvent event) { //_CODE_:textfield1:568846:
   println("textfield1 - GTextField >> GEvent." + event + " @ " + millis());
-  String text = textfield1.getText();
-  if (text == "Messages To Zumo")
+  // on the change event of the messages to zumo text field
+  String text = textfield1.getText(); // get the text of the textfield1 which is the text field which is 
+                                      // used to send messages tp the Zumo and set it into a string called text
+
+  if (text == "Messages To Zumo") // if the text of the field is equal to Messages To Zumo
   {
-    textfield1.setText("");
+    textfield1.setText(""); // set the text in the field to empty string
   }
 } //_CODE_:textfield1:568846:
-//left
 public void button2_click1(GButton source, GEvent event) { //_CODE_:button2:308221:
   println("button2 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("a");
+  // on the click event of the left button 
+  serialPort.write("a"); // write an a to the serial which will excute code in the Arduino files to turn the Zumo left
 } //_CODE_:button2:308221:
-//right
 public void button3_click1(GButton source, GEvent event) { //_CODE_:button3:604378:
   println("button3 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("d");
+  // on the click event of the right button
+  serialPort.write("d"); // write a d to the serial which will execute code in the Arduino files to turn the Zumo right
 } //_CODE_:button3:604378:
-//forward
 public void button4_click1(GButton source, GEvent event) { //_CODE_:button4:348760:
   println("button4 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("w");
+  // on the click event of the forward button
+  serialPort.write("w"); // write a w to the serial which will execute code in the Arduino files to move the Zumo forwards
 } //_CODE_:button4:348760:
 //back
 public void button5_click1(GButton source, GEvent event) { //_CODE_:button5:984108:
   println("button5 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("s");
+  // on the click event of the back button
+  serialPort.write("s"); // write a s to the serial which will execute code in the Arduino files to move the Zumo backwards
 } //_CODE_:button5:984108:
 public void button6_click1(GButton source, GEvent event) { //_CODE_:button6:984108:
   println("button6 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write(" ");
+  // on the click event of the stop button
+  serialPort.write(" "); // write a space to the serial which will execute code in the Arduino files to bring the zumo to a stop
 } //_CODE_:button6:984108:
 public void button7_click1(GButton source, GEvent event) { //_CODE_:button7:984108:
   println("button7 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("l");
+  // on the click event of the left 90 button
+  serialPort.write("l"); // write a l to the seriaL which will execute code in the Arduino files to turn the Zumo left 90 degrees 
 } //_CODE_:button7:984108:
 public void button8_click1(GButton source, GEvent event) { //_CODE_:button8:984108:
   println("button8 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("ll");
+  // on the click event of the left 180 button 
+  serialPort.write("ll"); // write ll to the seriaL which will execute code in the Arduino files to turn the Zumo left 180 degrees 
 } //_CODE_:button8:984108:
 public void button9_click1(GButton source, GEvent event) { //_CODE_:button9:984108:
   println("button9 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("lda");
+  // on the click event of the left adjust button
+  serialPort.write("lda"); // write a lda to the seriaL which will execute code in the Arduino files to turn the Zumo slightly left
 } //_CODE_:button9:984108:
-public void button10_click1(GButton source, GEvent event) { //_CODE_:button10:984108:
+public void button10_click1(GButton source, GEvent event) { //_CODE_:button10:984108: 
   println("button10 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("rda");
+  // on the click event of the right adjust button
+  serialPort.write("rda"); // write an rda to the seriaL which will execute code in the Arduino files to turn the Zumo slightly right 
 } //_CODE_:button10:984108:
 public void button11_click1(GButton source, GEvent event) { //_CODE_:button11:984108:
   println("button12 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("rr");
+    // on the click event of the right 180 button
+  serialPort.write("rr"); // write rr to the seriaL which will execute code in the Arduino files to turn the Zumo right 180 degrees
 } //_CODE_:button11:984108:
 public void button12_click1(GButton source, GEvent event) { //_CODE_:button12:984108:
   println("button12 - GButton >> GEvent." + event + " @ " + millis());
-  serialPort.write("r");
+  // on the click event of the right 90 button
+  serialPort.write("r"); // write a r to the seriaL which will execute code in the Arduino files to turn the Zumo right 90 degrees
 } //_CODE_:button12:984108:
 
 
 // Create all the GUI controls. 
-// autogenerated do not edit
 public void createGUI() {
   G4P.messagesEnabled(false);
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
@@ -158,9 +145,8 @@ public void createGUI() {
 }
 
 // Variable declarations 
-// autogenerated do not edit
-GTextArea textarea1; 
-GButton button1; 
+GTextArea textarea1;
+GButton button1;
 GTextField textfield1; 
 GButton button2; 
 GButton button3; 
