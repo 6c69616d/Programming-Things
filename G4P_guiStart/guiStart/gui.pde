@@ -61,7 +61,30 @@ public void button6_click1(GButton source, GEvent event) { //_CODE_:button6:9841
   println("button6 - GButton >> GEvent." + event + " @ " + millis());
   serialPort.write(" ");
 } //_CODE_:button6:984108:
-
+public void button7_click1(GButton source, GEvent event) { //_CODE_:button7:984108:
+  println("button7 - GButton >> GEvent." + event + " @ " + millis());
+  serialPort.write("l");
+} //_CODE_:button7:984108:
+public void button8_click1(GButton source, GEvent event) { //_CODE_:button8:984108:
+  println("button8 - GButton >> GEvent." + event + " @ " + millis());
+  serialPort.write("ll");
+} //_CODE_:button8:984108:
+public void button9_click1(GButton source, GEvent event) { //_CODE_:button9:984108:
+  println("button9 - GButton >> GEvent." + event + " @ " + millis());
+  serialPort.write("lda");
+} //_CODE_:button9:984108:
+public void button10_click1(GButton source, GEvent event) { //_CODE_:button10:984108:
+  println("button10 - GButton >> GEvent." + event + " @ " + millis());
+  serialPort.write("rda");
+} //_CODE_:button10:984108:
+public void button11_click1(GButton source, GEvent event) { //_CODE_:button11:984108:
+  println("button12 - GButton >> GEvent." + event + " @ " + millis());
+  serialPort.write("rr");
+} //_CODE_:button11:984108:
+public void button12_click1(GButton source, GEvent event) { //_CODE_:button12:984108:
+  println("button12 - GButton >> GEvent." + event + " @ " + millis());
+  serialPort.write("r");
+} //_CODE_:button12:984108:
 
 
 // Create all the GUI controls. 
@@ -71,7 +94,7 @@ public void createGUI() {
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setCursor(ARROW);
   surface.setTitle("Sketch Window");
-  textarea1 = new GTextArea(this, 237, 11, 300, 300, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
+  textarea1 = new GTextArea(this, 300, 11, 300, 300, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
   textarea1.setText("Messages from Zumo");
   textarea1.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   textarea1.setOpaque(true);
@@ -91,7 +114,7 @@ public void createGUI() {
   button2.setText("Left");
   button2.setTextBold();
   button2.addEventHandler(this, "button2_click1");
-  button3 = new GButton(this, 127, 171, 80, 31);
+  button3 = new GButton(this, 127, 171, 80, 30);
   button3.setText("Right");
   button3.setTextBold();
   button3.addEventHandler(this, "button3_click1");
@@ -103,10 +126,35 @@ public void createGUI() {
   button5.setText("Back");
   button5.setTextBold();
   button5.addEventHandler(this, "button5_click1");
-  button6 = new GButton(this, 10, 10, 80, 30);
+  button6 = new GButton(this, 160, 225, 80, 30);
   button6.setText("Stop");
   button6.setTextBold();
   button6.addEventHandler(this, "button6_click1");
+  button7 = new GButton(this, 19, 350, 80, 30);
+  button7.setText("Left 90");
+  button7.setTextBold();
+  button7.addEventHandler(this, "button7_click1");
+  button8 = new GButton(this, 100, 350, 80, 30);
+  button8.setText("Left 180");
+  button8.setTextBold();
+  button8.addEventHandler(this, "button8_click1");
+  button9 = new GButton(this, 181, 350, 80, 30);
+  button9.setText("Left Adjust");
+  button9.setTextBold();
+  button9.addEventHandler(this, "button9_click1");
+  button10 = new GButton(this, 262, 350, 80, 30);
+  button10.setText("Right Adjust");
+  button10.setTextBold();
+  button10.addEventHandler(this, "button10_click1");
+  button11 = new GButton(this, 343, 350, 80, 30);
+  button11.setText("Right 180");
+  button11.setTextBold();
+  button11.addEventHandler(this, "button11_click1");
+  button12 = new GButton(this, 424, 350, 80, 30);
+  button12.setText("Right 90");
+  button12.setTextBold();
+  button12.addEventHandler(this, "button12_click1");
+  
 }
 
 // Variable declarations 
@@ -120,3 +168,8 @@ GButton button4;
 GButton button5; 
 GButton button6;
 GButton button7;
+GButton button8;
+GButton button9;
+GButton button10;
+GButton button11;
+GButton button12;

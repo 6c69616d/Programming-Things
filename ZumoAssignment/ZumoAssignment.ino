@@ -2,6 +2,8 @@
 #include <Wire.h>
 #include "movement.h"
 
+
+
 //white 5v
 //purple ground
 //grey trig
@@ -53,7 +55,7 @@ void commands() // a function that holds the commands functionality
 {
   if (Serial.available() > 0) // see if there's incoming serial data
   {
-    autonomous = ignoreCommands; // set the autonomous bool to false
+    autonomous = false; // set the autonomous bool to false
 
     incomingBytes = Serial.readString(); // read the serial string data into the incoming bytes variable
     incomingBytes.trim(); // trim the string in the incomingBytes variable to remove any whitespace at the end of the string
@@ -70,11 +72,37 @@ void commands() // a function that holds the commands functionality
       else // if ignoreCommands is set to true
       {
         mainCorridor = true; // Set the mainCorridor to true so that the Zumo knows it has been passed
+        ignoreCommands = false; // Set ignoreCommands to true so that commands can be accepted
+        autonomous = true; // set autonomous to true
       }
     }
     else if (incomingBytes == "s") // else if the incomingBytes string is set to s
     {
       Movement::backward(150); // move the Zumo forwards at a speed of 150
+    }
+    else if (incomingBytes == "r") // else if the incomingBytes string is set to r
+    {
+      Movement::right90(125); // rotate the Zumo 90 degrees to the right at a speed of 125
+    }
+    else if (incomingBytes == "rr") // else if the incomingBytes string is set to rr
+    {
+      Movement::right180(125); // rotate the Zumo 180 degrees to the right at a speed of 125
+    }
+    else if (incomingBytes == "l") // else if the incomingBytes string is set to l
+    {
+      Movement::left90(125); // rotate the Zumo 90 degrees to the left at a speed of 125
+    }
+    else if (incomingBytes == "ll") // else if the incomingBytes string is set to ll
+    {
+      Movement::left180(125); // rotate the Zumo 90 degrees to the left at a speed of 125
+    }
+    else if (incomingBytes == "lda") // else if the incomingBytes string is set to lda
+    {
+      Movement::leftDegreeAdjust(125); // slightly adjust the degree of the Zumo to the left at a speed of 125
+    }
+        else if (incomingBytes == "rda") // else if the incomingBytes string is set to rda
+    {
+      Movement::rightDegreeAdjust(125); // slightly adjust the degree of the Zumo to the right at a speed of 125
     }
     else if (incomingBytes == "d") // else if incomingBytes string is set to d
     {
@@ -85,11 +113,13 @@ void commands() // a function that holds the commands functionality
       else // if ignore commands is set to true
       {
         mainCorridor = true; // Set the mainCorridor to true so that the Zumo knows it has been passed
+        ignoreCommands = false;
+        autonomous = true;
       }
     }
     else if (incomingBytes == "") // else if the incomingBytes string is empty
     {
-      Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
+      Movement::halt(); // Set the motor speeds to 0 bringing the Zumo to a stop
     }
     else if (incomingBytes == "c") // else if the incomingBytes string is set to c
     {
@@ -148,7 +178,7 @@ void commands() // a function that holds the commands functionality
 
         for (String roomAndLocation : roomsAndLocations) // for every room and location stored in the roomsAndLocations array
         {
-          if (roomAndLocation.length > 0) // if the array item is empty do not output
+          if (roomAndLocation.length() > 0) // if the array item is empty do not output
           {
             Serial.println(roomAndLocation); // print out the contents of that element of the array
           }
@@ -174,7 +204,7 @@ void autonomousMovement() // a function that holds the autonomous movement funct
       (sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)) // if the two outer sensors or the two right most sensors or the two left most sensors are
     // greater than the QTR_THRESHOLD the zumo has hit a wall
   {
-    Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
+    Movement::halt(); // Set the motor speeds to 0 bringing the Zumo to a stop
     //delay(500); // delay for 500 milliseconds
     Serial.println("a wall or corner has been hit"); // write a message to the GUI saying a wall or corner has been hit
     Serial.println("enter a command"); // write a message to the GUI telling the user to enter a command
@@ -185,20 +215,21 @@ void autonomousMovement() // a function that holds the autonomous movement funct
     delay(50); // delay for 50 milliseconds
     if (sensor_values[0] > QTR_THRESHOLD) // if the left most sensor value is greater than the QTR_THRESHOLD then the robot has slightly touched a left wall
     {
-      Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
+      Movement::halt(); // Set the motor speeds to 0 bringing the Zumo to a stop
       delay(500); // delay for 500 milliseconds
       Movement::adjust(150, 0); // adjust the Zumo slightly to the right at a speed of 150 so it returns to the white
       delay(250); // delay for 250 miliseconds
     }
     else if (sensor_values[5] > QTR_THRESHOLD) // if the right most sensor value is greater than the QTR_THRESHOLD then the robot has slightly touched a right wall
     {
-      Movement::holt(); // Set the motor speeds to 0 bringing the Zumo to a stop
+      Movement::halt(); // Set the motor speeds to 0 bringing the Zumo to a stop
       delay(500); // delay for 500 milliseconds
       Movement::adjust(0, 150); // adjust the Zumo slightly to the left at a speed of 150 so it returns to the white
       delay(250); // delay for 250 milliseconds
     }
   }
 }
+
 void storeObjectDetected(int roomNumber) // a function that allows the Zumo to store rooms where objects have been detected
 {
   String strRoomNumber = String(roomNumber); // convert the room number to a string
@@ -209,7 +240,7 @@ void storeObjectDetected(int roomNumber) // a function that allows the Zumo to s
 void storeRoomLocations(int roomNumber, String location) // a function that allows the Zumo to hold the room numbers and their locations either left or right of the corridor
 {
   String strRoomNumber = String(roomNumber); // convert the room number to a string
-  String text = "Room: " + strRoomNumber + " Location: " + location + ""; // create a string with the room number and location
+  String text = "Room: " + strRoomNumber + " Location: " + location; // create a string with the room number and location
   roomsAndLocations[roomNumber - 1] = text; // add the string of room and location to the array of rooms and locations
 }
 
@@ -218,7 +249,7 @@ void roomSearch(String location) // a function that holds the room searching fun
   bool object = false;
   roomNumber++; // increment the room number
   String strRoomNumber = String(roomNumber); // convert the room number to a string
-  Serial.println("Here is room number " + strRoomNumber + " and is located on the " + location + "\r\n"); //number the room and state whether on the left or right of the room in the GUI
+  Serial.println("Here is room number " + strRoomNumber + " and is located on the " + location); //number the room and state whether on the left or right of the room in the GUI
 
   storeRoomLocations(roomNumber, location); //Zumo retains the room numbers and locations
   Movement::forward(75); // move the Zumo forwards at a speed of 75
@@ -240,7 +271,7 @@ void roomSearch(String location) // a function that holds the room searching fun
     }
     delay(20); // delay for 20 milliseconds
   }
-  Movement::holt(); // set both the motors to 0 bringing the Zumo to a stop
+  Movement::halt(); // set both the motors to 0 bringing the Zumo to a stop
 
   if (object) // if an object has been detected
   {
