@@ -11,7 +11,7 @@
 
 #define TRIGGER_PIN  6  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAX_DISTANCE 20 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define MAX_DISTANCE 30 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define NUM_SENSORS 6 // Number of sensors that the ZumoReflectanceSensorArray has
 #define QTR_THRESHOLD  800 // Reflectance from ZumoReflectanceSensorArray threshold. Used to know when the Zumo is on black.
 
@@ -71,6 +71,7 @@ void commands() // a function that holds the commands functionality
       }
       else // if ignoreCommands is set to true
       {
+        Serial.println("Passing main corridor but I am ignoring");
         mainCorridor = true; // Set the mainCorridor to true so that the Zumo knows it has been passed
         ignoreCommands = false; // Set ignoreCommands to true so that commands can be accepted
         autonomous = true; // set autonomous to true
@@ -112,6 +113,7 @@ void commands() // a function that holds the commands functionality
       }
       else // if ignore commands is set to true
       {
+        Serial.println("Passing main corridor but I am ignoring");
         mainCorridor = true; // Set the mainCorridor to true so that the Zumo knows it has been passed
         ignoreCommands = false;
         autonomous = true;
@@ -137,6 +139,7 @@ void commands() // a function that holds the commands functionality
       else // if ignoreCommands is set to true
       {
         passedRoom = true; // set passedRoom to true so that the Zumo knows it has been passed
+        Serial.println("Passing room on right but I am ignoring");
       }
     }
     else if (incomingBytes == "Ro L") // else if the incomingBytes string is set to 'Ro L'
@@ -149,6 +152,7 @@ void commands() // a function that holds the commands functionality
       }
       else // if ignoreCommands is set to true
       {
+        Serial.println("Passing room on left but I am ignoring");
         passedRoom = true; // set passedRoom to true so that the Zumo knows it has been passed
       }
     }
