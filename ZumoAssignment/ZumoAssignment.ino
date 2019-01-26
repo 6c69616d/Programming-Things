@@ -133,7 +133,7 @@ void commands() // a function that holds the commands functionality
       if (!ignoreCommands) // if ignoreCommands is set to false
       {
         Movement::right(150); // move the Zumo right into the room at a speed of 150
-        delay(800); // delay for 600 milliseconds
+        delay(800); // delay for 800 milliseconds
         roomSearch("right"); // function call of roomSearch passing through right so that the messages inside relate to right hand room
       }
       else // if ignoreCommands is set to true
@@ -147,7 +147,7 @@ void commands() // a function that holds the commands functionality
       if (!ignoreCommands) // if ignoreCommands is set to false
       {
         Movement::left(150); //turn left into the room at a speed of 150
-        delay(800); // delay for 600 milliseconds
+        delay(800); // delay for 800 milliseconds
         roomSearch("left"); // function call of roomSearch passing through left so that the messages inside relate to left hand room
       }
       else // if ignoreCommands is set to true
